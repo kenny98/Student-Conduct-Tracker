@@ -47,6 +47,7 @@ def signup():
 
 
 # Get all users route
+# Must be an admin to access this route
 @user_views.route("/api/users", methods=["GET"])
 @jwt_required()
 def get_users():

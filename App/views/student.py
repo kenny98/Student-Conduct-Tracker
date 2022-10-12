@@ -5,6 +5,7 @@ from App.controllers import (
     create_student,
     get_student,
     get_all_students,
+    get_students_by_name,
     get_all_student_reviews,
     update_student,
     delete_student,
@@ -66,6 +67,16 @@ def get_student_action(student_id):
     student = get_student(student_id)
     if student:
         return jsonify(student.to_json()), 200
+    return jsonify({"error": "student not found"}), 404
+
+
+# Gets a student given their name
+@student_views.route("/api/students/name/<string:name>", methods=["GET"])
+@jwt_required
+def get_student_by_name_action(name):
+    students = get_students_by_name(name)
+    if students:
+        return jsonify([student.to_json() for student in students]), 200
     return jsonify({"error": "student not found"}), 404
 
 

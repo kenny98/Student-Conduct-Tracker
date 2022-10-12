@@ -12,6 +12,11 @@ def create_student(name, programme, faculty):
     return new_student
 
 
+# Gets a student by their name
+def get_students_by_name(name):
+    return Student.query.filter_by(name=name).all()
+
+
 # Gets a student by their id
 def get_student(id):
     return Student.query.get(id)
