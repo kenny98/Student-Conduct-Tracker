@@ -6,6 +6,8 @@ from App.controllers import (
     create_user,
     get_all_users,
     get_all_users_json,
+    delete_user,
+    get_users_by_access,
 )
 
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
@@ -17,17 +19,9 @@ def get_user_page():
     return render_template("users.html", users=users)
 
 
-@user_views.route("/api/users", methods=["GET"])
-def get_users_action():
-    users = get_all_users_json()
-    return jsonify(users)
-
-
-@user_views.route("/api/users", methods=["POST"])
-def create_user_action():
-    data = request.json
-    create_user(data["username"], data["password"])
-    return jsonify({"message": f"user {data['username']} created"})
+@user_views.route("/static/users", methods=["GET"])
+def static_user_page():
+    return send_from_directory("static", "static-user.html")
 
 
 @user_views.route("/identify", methods=["GET"])
@@ -40,6 +34,63 @@ def identify_user_action():
     )
 
 
-@user_views.route("/static/users", methods=["GET"])
-def static_user_page():
-    return send_from_directory("static", "static-user.html")
+# Sign up route
+@user_views.route("/api/users", methods=["POST"])
+def signup():
+    data = request.json
+    user = create_user(
+        username=data["username"], password=data["password"], access=["access"]
+    )
+    if user:
+        return jsonify({"message": f"user {data['username']} created"}), 201
+    return jsonify({"message": "User not created"}), 400
+
+
+# Get all users route
+@user_views.route("/api/users", methods=["GET"])
+@jwt_required()
+def get_users():
+    if current_identity.access == "admin":
+        users = get_all_users_json()
+        return jsonify(users), 200
+    return jsonify({"message": "Access denied"}), 403
+
+
+# Get user by id route
+# Must be an admin to access this route
+@user_views.route("/api/users/<int:user_id>", methods=["GET"])
+@jwt_required()
+def get_user(user_id):
+    if not current_identity.is_admin():
+        return jsonify({"message": "Access denied"}), 403
+    user = get_user(user_id)
+    if user:
+        return jsonify(user), 200
+    return jsonify({"message": "User not found"}), 404
+
+
+# Delete user route
+# Must be an admin to access this route
+@user_views.route("/api/users/<int:user_id>", methods=["DELETE"])
+@jwt_required()
+def delete_user(user_id):
+    if not current_identity.is_admin():
+        return jsonify({"message": "Access denied"}), 403
+    user = get_user(user_id)
+    if user:
+        delete_user(user_id)
+        return jsonify({"message": "User deleted"}), 200
+    return jsonify({"message": "User not found"}), 404
+
+
+# Get user by access level route
+# Must be an admin to access this route
+@user_views.route("/api/users/access/<int:access_level>", methods=["GET"])
+@jwt_required()
+def get_user_by_access(access_level):
+    if not current_identity.is_admin():
+        return jsonify({"message": "Access denied"}), 403
+    users = get_users_by_access(access_level)
+    if users:
+        return jsonify(users), 200
+    return jsonify({"message": "No users found"}), 404
