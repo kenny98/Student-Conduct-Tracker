@@ -7,8 +7,9 @@ from App.controllers import (
     get_user,
     get_all_users,
     get_all_users_json,
-    delete_user,
     get_users_by_access,
+    delete_user,
+    get_user_by_username,
 )
 
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
@@ -39,6 +40,8 @@ def identify_user_action():
 @user_views.route("/api/users", methods=["POST"])
 def signup_action():
     data = request.json
+    if get_user_by_username(data["username"]):
+        return jsonify({"message": "User taken."}), 400
     user = create_user(
         username=data["username"], password=data["password"], access=data["access"]
     )
