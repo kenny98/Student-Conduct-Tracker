@@ -98,6 +98,4 @@ def delete_student_action(student_id):
 @jwt_required()
 def get_all_student_reviews_action(student_id):
     reviews = get_all_student_reviews(student_id)
-    if reviews:
-        return jsonify([review.to_json() for review in reviews]), 200
-    return jsonify({"error": "reviews not found"}), 404
+    return jsonify(reviews)
