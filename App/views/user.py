@@ -41,7 +41,7 @@ def identify_user_action():
 def signup_action():
     data = request.json
     if get_user_by_username(data["username"]):
-        return jsonify({"message": "User taken."}), 400
+        return jsonify({"message": "Username taken."}), 400
     user = create_user(
         username=data["username"], password=data["password"], access=data["access"]
     )
