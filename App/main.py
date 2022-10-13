@@ -12,11 +12,11 @@ from App.database import create_db
 
 from App.controllers import setup_jwt
 
-from App.views import user_views, index_views
+from App.views import user_views, index_views, review_views, student_views
 
 # New views must be imported and added to this list
 
-views = [user_views, index_views]
+views = [user_views, index_views, review_views, student_views]
 
 
 def add_views(app, views):

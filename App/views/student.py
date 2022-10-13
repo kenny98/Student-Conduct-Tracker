@@ -18,7 +18,7 @@ student_views = Blueprint("student_views", __name__, template_folder="../templat
 # Create student given name, programme and faculty
 # Must be an admin to access this route
 @student_views.route("/api/students", methods=["POST"])
-@jwt_required
+@jwt_required()
 def create_student_action():
     if current_identity.is_admin():
         data = request.json
@@ -34,7 +34,7 @@ def create_student_action():
 # Updates student given student id, name, programme and faculty
 # Must be an admin to access this route
 @student_views.route("/api/students/<int:student_id>", methods=["PUT"])
-@jwt_required
+@jwt_required()
 def update_student_action(student_id):
     if current_identity.is_admin():
         data = request.json
@@ -52,7 +52,7 @@ def update_student_action(student_id):
 
 # Lists all students
 @student_views.route("/api/students", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_all_students_action():
     students = get_all_students()
     if students:
@@ -62,7 +62,7 @@ def get_all_students_action():
 
 # Gets a student given student id
 @student_views.route("/api/students/<int:student_id>", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_student_action(student_id):
     student = get_student(student_id)
     if student:
@@ -72,7 +72,7 @@ def get_student_action(student_id):
 
 # Gets a student given their name
 @student_views.route("/api/students/name/<string:name>", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_student_by_name_action(name):
     students = get_students_by_name(name)
     if students:
@@ -83,7 +83,7 @@ def get_student_by_name_action(name):
 # Deletes a student given student id
 # Must be an admin to access this route
 @student_views.route("/api/students/<int:student_id>", methods=["DELETE"])
-@jwt_required
+@jwt_required()
 def delete_student_action(student_id):
     if current_identity.is_admin():
         outcome = delete_student(student_id)
@@ -95,7 +95,7 @@ def delete_student_action(student_id):
 
 # Lists all reviews for a given student.
 @student_views.route("/api/students/<int:student_id>/reviews", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_all_student_reviews_action(student_id):
     reviews = get_all_student_reviews(student_id)
     if reviews:

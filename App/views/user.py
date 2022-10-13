@@ -4,6 +4,7 @@ from flask_jwt import jwt_required, current_identity
 
 from App.controllers import (
     create_user,
+    get_user,
     get_all_users,
     get_all_users_json,
     delete_user,
@@ -36,10 +37,10 @@ def identify_user_action():
 
 # Sign up route
 @user_views.route("/api/users", methods=["POST"])
-def signup():
+def signup_action():
     data = request.json
     user = create_user(
-        username=data["username"], password=data["password"], access=["access"]
+        username=data["username"], password=data["password"], access=data["access"]
     )
     if user:
         return jsonify({"message": f"user {data['username']} created"}), 201
@@ -50,8 +51,8 @@ def signup():
 # Must be an admin to access this route
 @user_views.route("/api/users", methods=["GET"])
 @jwt_required()
-def get_users():
-    if current_identity.access == "admin":
+def get_users_action():
+    if current_identity.is_admin():
         users = get_all_users_json()
         return jsonify(users), 200
     return jsonify({"message": "Access denied"}), 403
@@ -61,12 +62,12 @@ def get_users():
 # Must be an admin to access this route
 @user_views.route("/api/users/<int:user_id>", methods=["GET"])
 @jwt_required()
-def get_user(user_id):
+def get_user_action(user_id):
     if not current_identity.is_admin():
         return jsonify({"message": "Access denied"}), 403
     user = get_user(user_id)
     if user:
-        return jsonify(user), 200
+        return jsonify(user.to_json()), 200
     return jsonify({"message": "User not found"}), 404
 
 
@@ -74,7 +75,7 @@ def get_user(user_id):
 # Must be an admin to access this route
 @user_views.route("/api/users/<int:user_id>", methods=["DELETE"])
 @jwt_required()
-def delete_user(user_id):
+def delete_user_action(user_id):
     if not current_identity.is_admin():
         return jsonify({"message": "Access denied"}), 403
     user = get_user(user_id)
@@ -88,10 +89,10 @@ def delete_user(user_id):
 # Must be an admin to access this route
 @user_views.route("/api/users/access/<int:access_level>", methods=["GET"])
 @jwt_required()
-def get_user_by_access(access_level):
+def get_user_by_access_action(access_level):
     if not current_identity.is_admin():
         return jsonify({"message": "Access denied"}), 403
     users = get_users_by_access(access_level)
     if users:
-        return jsonify(users), 200
+        return jsonify([user.to_json() for user in users]), 200
     return jsonify({"message": "No users found"}), 404
