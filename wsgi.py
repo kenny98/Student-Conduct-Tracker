@@ -82,5 +82,23 @@ def user_tests_command(type):
     else:
         sys.exit(pytest.main(["-k", "App"]))
 
+@test.command("student", help="Run Student tests")
+@click.argument("type", default="all")
+def user_tests_command(type):
+    if type == "unit":
+        sys.exit(pytest.main(["-k", "StudentUnitTests"]))
+    elif type == "int":
+        sys.exit(pytest.main(["-k", "StudentIntegrationTests"]))
+    else:
+        sys.exit(pytest.main(["-k", "App"]))
 
+@test.command("review", help="Run Student tests")
+@click.argument("type", default="all")
+def user_tests_command(type):
+    if type == "unit":
+        sys.exit(pytest.main(["-k", "ReviewUnitTests"]))
+    elif type == "int":
+        sys.exit(pytest.main(["-k", "ReviewIntegrationTests"]))
+    else:
+        sys.exit(pytest.main(["-k", "App"]))
 app.cli.add_command(test)
