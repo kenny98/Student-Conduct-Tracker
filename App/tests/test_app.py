@@ -1,8 +1,5 @@
-from msilib.schema import Class
 import os, tempfile, pytest, logging, unittest
-from unittest import runner
 from webbrowser import get
-from unittest.mock import Mock
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.main import create_app
