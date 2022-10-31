@@ -207,6 +207,9 @@ def test_authenticate():
 
 
 
+
+
+#NOTE: intergration tests are supposed to run in a particular order but since we are using the unitest thing, it runs the test simulataneously which is a problem. Would have to figure out how to run them within a suite.
 class UsersIntegrationTests(unittest.TestCase):
     def test_create_admin(self):
         admin = create_user("rick", "rickpass", 2)
