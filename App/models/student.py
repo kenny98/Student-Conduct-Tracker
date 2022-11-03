@@ -29,3 +29,13 @@ class Student(db.Model):
             "programme": self.programme,
             "karma": self.get_karma(),
         }
+
+    # Refactor Item 1 - Only Model should interact with Database
+    def add(self):
+        db.session.add(self)
+    
+    def commit(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)

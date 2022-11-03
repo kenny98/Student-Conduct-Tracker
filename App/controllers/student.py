@@ -1,14 +1,16 @@
 from flask import jsonify
 from App.models import Student
-from App.database import db
+#from App.database import db
 
 
 # Creates a new student given their name, programme and faculty
 # Commits the student to the database and returns the student
 def create_student(name, programme, faculty):
     new_student = Student(name=name, programme=programme, faculty=faculty)
-    db.session.add(new_student)
-    db.session.commit()
+    new_student.add()
+    new_student.commit()
+    #db.session.add(new_student)
+    #db.session.commit()
     return new_student
 
 
@@ -55,8 +57,10 @@ def update_student(id, name=None, programme=None, faculty=None):
             student.programme = programme
         if faculty:
             student.faculty = faculty
-        db.session.add(student)
-        db.session.commit()
+        student.add()
+        student.commit()
+        #db.session.add(student)
+        #db.session.commit()
         return student
     return None
 
@@ -65,7 +69,9 @@ def update_student(id, name=None, programme=None, faculty=None):
 def delete_student(id):
     student = Student.query.get(id)
     if student:
-        db.session.delete(student)
-        db.session.commit()
+        student.delete()
+        student.commit()
+        #db.session.delete(student)
+        #db.session.commit()
         return True
     return False

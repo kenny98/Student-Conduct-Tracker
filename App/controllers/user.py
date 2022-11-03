@@ -1,12 +1,14 @@
 from App.models import User
-from App.database import db
+# from App.database import db
 
 
 # Creates a new user given their username, password and access level
 def create_user(username, password, access=1):
     new_user = User(username=username, password=password, access=access)
-    db.session.add(new_user)
-    db.session.commit()
+    new_user.add()
+    new_user.commit()
+    #db.session.add(new_user)
+    #db.session.commit()
     return new_user
 
 
@@ -43,8 +45,10 @@ def update_user(id, username):
     user = get_user(id)
     if user:
         user.username = username
-        db.session.add(user)
-        return db.session.commit()
+        user.add()
+        return user.commit()
+        #db.session.add(user)
+        #return db.session.commit()
     return None
 
 
@@ -52,6 +56,8 @@ def update_user(id, username):
 def delete_user(id):
     user = get_user(id)
     if user:
-        db.session.delete(user)
-        return db.session.commit()
+        user.delete()
+        return user.commit()
+        #db.session.delete(user)
+        #return db.session.commit()
     return None

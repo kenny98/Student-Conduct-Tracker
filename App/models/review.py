@@ -51,3 +51,13 @@ class Review(db.Model):
             "num_upvotes": self.get_num_upvotes(),
             "num_downvotes": self.get_num_downvotes(),
         }
+    
+    # Refactor Item 1 - Only Model should interact with Database
+    def add(self):
+        db.session.add(self)
+    
+    def commit(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)

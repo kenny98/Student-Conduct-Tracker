@@ -1,5 +1,5 @@
 from App.models import Review, Student, User
-from App.database import db
+#from App.database import db
 
 
 # Creates a review given a student id, user id and review text
@@ -9,13 +9,19 @@ def create_review(student_id, user_id, text):
     student = Student.query.get(student_id)
     if user and student:
         review = Review(user_id, student_id, text)
-        db.session.add(review)
-        db.session.commit()
+        review.add()
+        review.commit()
+        #db.session.add(review)
+        #db.session.commit()
         user.reviews.append(review)
         student.reviews.append(review)
-        db.session.add(user)
-        db.session.add(student)
-        db.session.commit()
+        user.add()
+        user.commit()
+        student.add()
+        student.commit()
+        #db.session.add(user)
+        #db.session.add(student)
+        #db.session.commit()
         return review
     return None
 
@@ -26,8 +32,10 @@ def update_review(id, text):
     review = Review.query.get(id)
     if review:
         review.text = text
-        db.session.add(review)
-        db.session.commit()
+        review.add()
+        review.commit()
+        #db.session.add(review)
+        #db.session.commit()
         return review
     return None
 
@@ -37,8 +45,10 @@ def update_review(id, text):
 def delete_review(id):
     review = Review.query.get(id)
     if review:
-        db.session.delete(review)
-        db.session.commit()
+        review.delete()
+        review.commit()
+        #db.session.delete(review)
+        #db.session.commit()
         return True
     return False
 
@@ -89,8 +99,10 @@ def upvote_review(review_id, user_id):
     user = User.query.get(user_id)
     if review and user:
         review.vote(user_id, "up")
-        db.session.add(review)
-        db.session.commit()
+        review.add()
+        review.commit()
+        #db.session.add(review)
+        #db.session.commit()
         return review
     return None
 
@@ -102,8 +114,10 @@ def downvote_review(review_id, user_id):
     user = User.query.get(user_id)
     if review and user:
         review.vote(user_id, "down")
-        db.session.add(review)
-        db.session.commit()
+        review.add()
+        review.commit()
+        #db.session.add(review)
+        #db.session.commit()
         return review
     return None
 
