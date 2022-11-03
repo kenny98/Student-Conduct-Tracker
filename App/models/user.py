@@ -1,28 +1,20 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.database import db
 
-ACCESS = {
-    "user": 1,
-    "admin": 2,
-}
-
-
+# Maybe use interface here, so that it can be implemented by children (Staff and Admin)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
     access = db.Column(db.Integer, nullable=False)
-    reviews = db.relationship(
-        "Review", backref="user", lazy=True, cascade="all, delete-orphan"
-    )
 
-    def __init__(self, username, password, access=ACCESS["user"]):
+    def __init__(self, username, password, access=1):
         self.username = username
         self.set_password(password)
         self.access = access
 
     def is_admin(self):
-        return self.access == ACCESS["admin"]
+        return self.access == 2
 
     def allowed(self, access_level):
         return self.access >= access_level

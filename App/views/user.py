@@ -4,6 +4,8 @@ from flask_jwt import jwt_required, current_identity
 
 from App.controllers import (
     create_user,
+    create_staffuser,
+    create_adminuser,
     get_user,
     get_all_users,
     get_all_users_json,
@@ -36,19 +38,45 @@ def identify_user_action():
     )
 
 
-# Sign up route
+# Sign up route (Users)
 @user_views.route("/api/users", methods=["POST"])
 def signup_action():
     data = request.json
     if get_user_by_username(data["username"]):
         return jsonify({"message": "Username taken."}), 400
+        # maybe code here to switch between staff and admin creation
     user = create_user(
-        username=data["username"], password=data["password"], access=data["access"]
+        username=data["username"], password=data["password"]
     )
     if user:
         return jsonify({"message": f"user {data['username']} created"}), 201
     return jsonify({"message": "User not created"}), 400
 
+# Sign up route (Staff Users)
+@user_views.route("/api/staffusers", methods=["POST"])
+def signup_staffusers_action():
+    data = request.json
+    if get_user_by_username(data["username"]):
+        return jsonify({"message": "Username taken."}), 400
+    user = create_staffuser(
+        username=data["username"], password=data["password"]
+    )
+    if user:
+        return jsonify({"message": f"user {data['username']} created"}), 201
+    return jsonify({"message": "User not created"}), 400
+
+# Sign up route (Admin Users)
+@user_views.route("/api/adminusers", methods=["POST"])
+def signup_adminusers_action():
+    data = request.json
+    if get_user_by_username(data["username"]):
+        return jsonify({"message": "Username taken."}), 400
+    user = create_adminuser(
+        username=data["username"], password=data["password"]
+    )
+    if user:
+        return jsonify({"message": f"user {data['username']} created"}), 201
+    return jsonify({"message": "User not created"}), 400
 
 # Get all users route
 # Must be an admin to access this route

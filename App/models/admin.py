@@ -2,4 +2,7 @@
 from App.models import User
 
 class AdminUser(User):
-    pass
+    def __init__(self, username, password, access=2):
+        self.username = username
+        self.set_password(password)
+        self.access = access

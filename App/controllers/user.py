@@ -1,10 +1,27 @@
-from App.models import User
+from App.models import User, StaffUser, AdminUser
 # from App.database import db
 
+# Creates a new user given their username, password and access level
+def create_user(username, password):
+    new_user = User(username=username, password=password)
+    new_user.add()
+    new_user.commit()
+    #db.session.add(new_user)
+    #db.session.commit()
+    return new_user
 
 # Creates a new user given their username, password and access level
-def create_user(username, password, access=1):
-    new_user = User(username=username, password=password, access=access)
+def create_staffuser(username, password):
+    new_user = StaffUser(username=username, password=password)
+    new_user.add()
+    new_user.commit()
+    #db.session.add(new_user)
+    #db.session.commit()
+    return new_user
+
+# Creates a new user given their username, password and access level
+def create_adminuser(username, password):
+    new_user = AdminUser(username=username, password=password)
     new_user.add()
     new_user.commit()
     #db.session.add(new_user)
