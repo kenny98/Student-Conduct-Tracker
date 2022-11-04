@@ -1,32 +1,37 @@
-from App.models import User, StaffUser, AdminUser
+from App.models import User
+#from App.models import StaffUser, AdminUser
+from App.models import UserFactory
 # from App.database import db
 
 # Creates a new user given their username, password and access level
 def create_user(username, password):
-    new_user = User(username=username, password=password)
-    new_user.add()
-    new_user.commit()
+    new_user = UserFactory()
+    user = new_user.getUser("User", username=username, password=password)
+    user.add()
+    user.commit()
     #db.session.add(new_user)
     #db.session.commit()
-    return new_user
+    return user
 
 # Creates a new user given their username, password and access level
 def create_staffuser(username, password):
-    new_user = StaffUser(username=username, password=password)
-    new_user.add()
-    new_user.commit()
+    new_user = UserFactory()
+    staff_user = new_user.getUser("Staff", username=username, password=password)
+    staff_user.add()
+    staff_user.commit()
     #db.session.add(new_user)
     #db.session.commit()
-    return new_user
+    return staff_user
 
 # Creates a new user given their username, password and access level
 def create_adminuser(username, password):
-    new_user = AdminUser(username=username, password=password)
-    new_user.add()
-    new_user.commit()
+    new_user = UserFactory()
+    admin_user = new_user.getUser("Admin", username=username, password=password)
+    admin_user.add()
+    admin_user.commit()
     #db.session.add(new_user)
     #db.session.commit()
-    return new_user
+    return admin_user
 
 
 # Gets a user by their username

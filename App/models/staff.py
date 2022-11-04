@@ -7,7 +7,10 @@ class StaffUser(User):
         "Review", backref="user", lazy=True, cascade="all, delete-orphan"
     )
 
-    def __init__(self, username, password, access=1):
+    def __init__(self, username, password):
         self.username = username
         self.set_password(password)
-        self.access = access
+        self.access = 1
+    
+    def is_admin(self):
+       return false

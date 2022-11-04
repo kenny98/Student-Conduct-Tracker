@@ -1,5 +1,6 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.database import db
+from abc import ABC, abstractmethod
 
 # Maybe use interface here, so that it can be implemented by children (Staff and Admin)
 class User(db.Model):
@@ -8,11 +9,13 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     access = db.Column(db.Integer, nullable=False)
 
+    @abstractmethod
     def __init__(self, username, password, access=1):
         self.username = username
         self.set_password(password)
         self.access = access
 
+    @abstractmethod
     def is_admin(self):
         return self.access == 2
 
