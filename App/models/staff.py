@@ -11,6 +11,3 @@ class StaffUser(User):
         self.username = username
         self.set_password(password)
         self.access = 1
-    
-    def is_admin(self):
-       return false

@@ -1,11 +1,12 @@
-from App.models import Review, Student, User
+from App.models import Review, Student, StaffUser
+#from App.models import User
 #from App.database import db
 
 
 # Creates a review given a student id, user id and review text
 # Returns the review object if successful, None otherwise
 def create_review(student_id, user_id, text):
-    user = User.query.get(user_id)
+    user = StaffUser.query.get(user_id)
     student = Student.query.get(student_id)
     if user and student:
         review = Review(user_id, student_id, text)
@@ -96,7 +97,7 @@ def get_reviews_by_user(user_id):
 # Returns the review object if successful, None otherwise
 def upvote_review(review_id, user_id):
     review = Review.query.get(review_id)
-    user = User.query.get(user_id)
+    user = StaffUser.query.get(user_id)
     if review and user:
         review.vote(user_id, "up")
         review.add()
@@ -111,7 +112,7 @@ def upvote_review(review_id, user_id):
 # Returns the review object if successful, None otherwise
 def downvote_review(review_id, user_id):
     review = Review.query.get(review_id)
-    user = User.query.get(user_id)
+    user = StaffUser.query.get(user_id)
     if review and user:
         review.vote(user_id, "down")
         review.add()

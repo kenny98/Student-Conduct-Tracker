@@ -6,7 +6,4 @@ class AdminUser(User):
         self.username = username
         self.set_password(password)
         self.access = 2
-    
-    def is_admin(self):
-       return true
         

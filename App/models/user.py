@@ -15,9 +15,11 @@ class User(db.Model):
         self.set_password(password)
         self.access = access
 
-    @abstractmethod
     def is_admin(self):
         return self.access == 2
+    
+    def is_staff(self):
+        return self.access == 1
 
     def allowed(self, access_level):
         return self.access >= access_level
