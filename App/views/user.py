@@ -12,10 +12,10 @@ from App.controllers import (
     get_users_by_access,
     delete_user,
     get_user_by_username,
+    authenticate
 )
 
 user_views = Blueprint("user_views", __name__, template_folder="../templates")
-
 
 @user_views.route("/users", methods=["GET"])
 def get_user_page():

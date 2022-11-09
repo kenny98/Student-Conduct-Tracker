@@ -1,6 +1,7 @@
 from App.database import db
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.ext.mutable import MutableDict, MutableList
+from sqlalchemy import PickleType
 
 
 class Review(db.Model):
@@ -9,6 +10,8 @@ class Review(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
     text = db.Column(db.String(1000), nullable=False)
     votes = db.Column(MutableDict.as_mutable(JSON), nullable=False)
+    voters = db.Column(MutableList.as_mutable(PickleType),
+                                    default=[])
 
     def __init__(self, user_id, student_id, text):
         self.user_id = user_id
@@ -18,7 +21,8 @@ class Review(db.Model):
 
     def vote(self, user_id, vote):
         self.votes.update({user_id: vote})
-        self.votes.update(
+        #self.voters.append(user_id)
+        """ self.votes.update(
             {"num_upvotes": len([vote for vote in self.votes.values() if vote == "up"])}
         )
         self.votes.update(
@@ -27,7 +31,13 @@ class Review(db.Model):
                     [vote for vote in self.votes.values() if vote == "down"]
                 )
             }
-        )
+        ) """
+
+        if (vote == "up" ):
+            self.votes["num_upvotes"] += 1
+
+        if (vote == "down"):
+            self.votes["num_downvotes"] += 1
 
     def get_num_upvotes(self):
         return self.votes["num_upvotes"]
