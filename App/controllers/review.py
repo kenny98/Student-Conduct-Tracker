@@ -95,33 +95,17 @@ def get_reviews_by_user(user_id):
 
 # Upvotes a post given a review id and user id
 # Returns the review object if successful, None otherwise
-def upvote_review(review_id, user_id):
+def vote_review(review_id, user_id, type):
     review = Review.query.get(review_id)
     user = StaffUser.query.get(user_id)
     if review and user:
-        review.vote(user_id, "up")
+        review.vote(user_id, type)
         review.add()
         review.commit()
         #db.session.add(review)
         #db.session.commit()
         return review
     return None
-
-
-# Downvotes a post given a review id and user id
-# Returns the review object if successful, None otherwise
-def downvote_review(review_id, user_id):
-    review = Review.query.get(review_id)
-    user = StaffUser.query.get(user_id)
-    if review and user:
-        review.vote(user_id, "down")
-        review.add()
-        review.commit()
-        #db.session.add(review)
-        #db.session.commit()
-        return review
-    return None
-
 
 # Gets all votes for a review given the review id
 def get_review_votes(id):

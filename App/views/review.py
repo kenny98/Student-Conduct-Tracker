@@ -7,8 +7,7 @@ from App.controllers import (
     get_all_reviews,
     update_review,
     delete_review,
-    upvote_review,
-    downvote_review
+    vote_review
 )
 
 review_views = Blueprint("review_views", __name__, template_folder="../templates")
@@ -27,6 +26,7 @@ def create_review_action():
     if (permit_staff()):
         data = request.json
         review = create_review(
+            # switch userid to use current id here
             user_id=data["user_id"], student_id=data["student_id"], text=data["text"]
         )
         if review:
@@ -68,12 +68,11 @@ def vote_review_action(review_id):
     if (permit_staff()):
         review = get_review(review_id)
         if review:
-            if (data["type"] == "up"):
-                upvote_review(review_id = review_id, user_id = current_identity.id)
-                print (current_identity.id)
-            if (data["type"] == "down"):
-                downvote_review(review_id = review_id, user_id = current_identity.id)
-            return jsonify(review.to_json()), 200
+            if (current_identity.id in review.get_voters()): # cannot vote more than once
+                return jsonify({"message": "Cannot vote more than once"})
+            else: # allowed to vote
+                vote_review(review_id = review_id, user_id = current_identity.id, type=data["type"])
+                return jsonify(review.to_json()), 200
         return jsonify({"error": "review not found"}), 404
     else:
         return jsonify({"message": "Access denied"}), 403
