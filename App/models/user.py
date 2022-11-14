@@ -35,6 +35,9 @@ class User(db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
     
+    def get_id(self):
+        return self.id
+    
     # Refactor Item 1 - Only Model should interact with Database
     def add(self):
         db.session.add(self)

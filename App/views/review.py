@@ -27,7 +27,7 @@ def create_review_action():
         data = request.json
         review = create_review(
             # switch userid to use current id here
-            user_id=data["user_id"], student_id=data["student_id"], text=data["text"]
+            user_id=current_identity.get_id(), student_id=data["student_id"], text=data["text"]
         )
         if review:
             return jsonify(review.to_json()), 201
